@@ -1,0 +1,24 @@
+{
+    "PaviaU": {
+        "path": "PaviaU",
+        "file_name": "PaviaU.mat",
+        "mat_name": "paviaU",
+        "gt_file_name": "PaviaU_gt.mat",
+        "gt_mat_name": "paviaU_gt",
+        "image_width": 610,
+        "image_height": 340,
+        "bands_num": 103,
+        "num_classes": 9
+    },
+    "Houston13": {
+        "path": "Houston13",
+        "file_name": "Houston.mat",
+        "mat_name": "Houston",
+        "gt_file_name": "Houston_gt.mat",
+        "gt_mat_name": "Houston_gt",
+        "image_width": 349,
+        "image_height": 1905,
+        "bands_num": 144,
+        "num_classes": 15
+    }
+}
