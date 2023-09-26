@@ -183,7 +183,7 @@ class OSC_SCL(pl.LightningModule):
         x, y = batch
 
         out = self(x)
-        y_hat = F.softmax(out['logits'], -1)
+        y_hat = F.softmin(out['distance'], -1)
 
         loss_contrast = self.contrast_computer(out['spe'], y, self.ksai) + self.contrast_computer(out['spa'], y, self.ksai)
 
@@ -207,11 +207,8 @@ class OSC_SCL(pl.LightningModule):
         out = self(x)
         distance = out['distance']
 
-        y_hat = F.softmax(out['logits'], -1)
-        prob, prediction = torch.max(y_hat, -1)
-
         gamma = distance * (1 - F.softmin(distance))
-        score = torch.min(gamma, 1)[0]
+        score, prediction = torch.min(gamma, 1)
         prediction[score > 0.1] = self.num_classes
 
         bi_prediction = torch.zeros_like(y, dtype=torch.long)
@@ -228,6 +225,18 @@ class OSC_SCL(pl.LightningModule):
         print('f1_micro:', self.f1_meter.value('micro').item())
         print('test_auc:', self.auc.compute().item())
         print('test_classes_acc: ', self.aa_meter.compute().tolist())
+
+    def predict_step(self, batch, batch_idx, dataloader_idx: int = 0):
+        x = batch
+
+        out = self(x)
+        distance = out['distance']
+
+        gamma = distance * (1 - F.softmin(distance))
+        score, prediction = torch.min(gamma, 1)
+        prediction[score > 0.1] = self.num_classes
+
+        return prediction
 
     def configure_optimizers(self):
         optimizer = Adam(self.parameters(), lr=1e-3)
