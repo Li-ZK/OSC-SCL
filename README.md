@@ -28,4 +28,4 @@ datasets
 
 ## Usage:
 
-run index.py
+run main.py
